@@ -1,30 +1,30 @@
 <template>
     <div class="tweet">
         <div class="tweet-content">
-            <a class="tweet-profile" v-bind:href="author_url">
-                <img class="tweet-avatar" v-bind:src="article.user.profile_image_url">
+            <a class="tweet-profile" v-bind:href="tweet_data.author_url">
+                <img class="tweet-avatar"
+                     v-bind:src="tweet_data.profile_img_url">
 
                 <strong class="tweet-username">
-                    [fullname]
+                    {{ tweet_data.name }}
                 </strong>
 
                 <span class="tweet-screen-name">
-                @<b>[username]</b>
+                @<b>{{ tweet_data.profile_screen_name }}</b>
                 </span>
 
-                <span class="tweet-created-time">- [timestamp]</span>
+                <span class="tweet-created-time">- {{ article.create_at}}</span>
+                <span class="tweet-retweet-label">{{ article.retweeted_profile ? '(retweet)' : '' }}</span>
 
             </a>
 
             <div class="tweet-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quam ipsum, finibus ac est sed, vestibulum condimentum neque. Sed eget iaculis.
+                {{ article.text }}
             </div>
 
         </div>
 
-        <div class="media">
-            <img class="media-img" src="http://placekitten.com/500/400">
-        </div>
+        <Media v-bind:media="article.media"/>
     </div>
 </template>
 

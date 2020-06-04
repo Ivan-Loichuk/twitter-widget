@@ -9,3 +9,74 @@ h3 {
     border-top: 1px solid #b7bec2;
     margin: auto;
 }
+.search-bar-form {
+    width: 100%;
+}
+
+.search-bar {
+    padding: 9px 25px;
+}
+
+.autocomplete-list {
+    width: 100%;
+    list-style: none;
+    text-align: start;
+    padding: 5px 10px;
+}
+
+.li-sub p {
+    margin: 0;
+}
+
+.list li {
+    border-bottom: 1px solid #ccc;
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+}
+.inner {
+    display: table-row;
+    overflow: hidden;
+    color: #000000;
+}
+.li-img {
+    display: table-cell;
+    vertical-align: middle;
+    width: 10%;
+    padding-right: 1em;
+}
+.li-img img {
+    display: block;
+    width: 100%;
+    height: auto;
+
+}
+.li-text {
+    display: table-cell;
+    width: 70%;
+}
+.li-head {
+    margin: 10px 0 0 0;
+    font-size: 16px;
+}
+.li-sub {
+    margin: 0;
+    color: #146eff;
+}
+
+.li-sub p {
+    font-size: 14px;
+}
+
+@media all and (min-width: 45em) {
+    .list li {
+        float: left;
+        width: 50%;
+    }
+}
+
+@media all and (min-width: 75em) {
+    .list li {
+        width: 33.33333%;
+    }
+}

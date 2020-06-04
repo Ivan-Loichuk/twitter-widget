@@ -63,3 +63,6 @@ body {
     max-height: 506px;
     width: 100%;
 }
+.tweet-retweet-label {
+    color: orange;
+}

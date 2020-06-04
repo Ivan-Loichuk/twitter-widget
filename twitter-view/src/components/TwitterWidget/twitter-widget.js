@@ -12,16 +12,16 @@ export default {
     },
     data() {
         return {
-            articles: null,
+            user_tweets: null,
         };
     },
     mounted: function () {
-        this.getTwitterNews()
+
     },
     methods: {
-        getTwitterNews: function(){
+        getUserTweets: function (screen_name) {
             axios
-                .get('/api/twitter-news')
+                .get('/api/get/user-tweets/' + screen_name)
                 .then(res => {
                     if (res.data.errors) {
                         for (let key in res.data.errors) {
@@ -33,7 +33,7 @@ export default {
                             });
                         }
                     } else {
-                        this.articles = res.data;
+                        this.user_tweets = res.data;
                     }
                 })
         },

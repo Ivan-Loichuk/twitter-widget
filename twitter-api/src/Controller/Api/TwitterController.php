@@ -58,7 +58,7 @@ class TwitterController extends AbstractController
     {
         $twitter = new TwitterService($this->twitter_api);
 
-        $users_list = $twitter->searchTweets($user);
+        $users_list = $twitter->searchUserTweets($user);
 
         return new JsonResponse($users_list);
     }

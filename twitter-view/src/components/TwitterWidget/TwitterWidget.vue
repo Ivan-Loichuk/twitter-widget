@@ -1,10 +1,13 @@
 <template>
-    <div class="container">
+    <div class="container widget">
         <div class="row">
-            <SearchBar/>
+            <SearchBar
+                    v-on:user-selected="getUserTweets"
+                    v-on:users-founded="user_tweets = null"
+            />
         </div>
-        <div class="row articles">
-            <div class="article" v-for="article in articles" v-bind:key="article.id">
+        <div class="row">
+            <div class="article" v-for="article in user_tweets" v-bind:key="article.id">
                 <TweetArticle v-bind:article="article"/>
             </div>
         </div>
