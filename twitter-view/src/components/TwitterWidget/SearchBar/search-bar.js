@@ -1,3 +1,4 @@
+import Loader from "../Loader/Loader.vue"
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from "axios";
@@ -8,6 +9,9 @@ const CancelToken = axios.CancelToken;
 
 export default {
     name: "SearchBar",
+    components: {
+        Loader
+    },
     data() {
         return {
             user_name: "",
@@ -15,7 +19,7 @@ export default {
             users: null,
             timeoutHandle: null,
             user_tweets: null,
-            user_selected: false,
+            active_loading: false,
         };
     },
     mounted: function () {
@@ -36,7 +40,6 @@ export default {
 
             if (isEmptyString(search_input)) {
                 self.users = null;
-                self.user_selected = true;
             }
 
             if (!isEmptyString(search_input)) {
@@ -48,7 +51,7 @@ export default {
 
         searchUsers: function (search_input) {
             const self = this;
-            self.user_selected = false;
+            self.clearData();
 
             axios
                 .get('/api/twitter-users/' + search_input, {
@@ -69,10 +72,18 @@ export default {
                             });
                         }
                     } else {
-                        this.users = res.data;
-                        this.$emit('users-founded')
+                        if (res.data.length !== 0) {
+                            this.users = res.data;
+                        }
+                        this.$emit('change-loader-status', false);
                     }
                 })
+        },
+
+        clearData: function () {
+            this.users = null;
+            this.$emit('users-founded')
+            this.$emit('change-loader-status', true);
         },
 
         searchUserTweets: function (screen_name) {
@@ -81,6 +92,10 @@ export default {
 
             if (isEmptyString(screen_name)) {
                 return;
+            }
+
+            if (self.cancel) {
+                self.cancel();
             }
 
             self.users = null;

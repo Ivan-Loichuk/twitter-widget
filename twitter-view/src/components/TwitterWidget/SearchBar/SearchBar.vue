@@ -2,12 +2,17 @@
     <div class="container search-bar">
         <div class="row">
             <form action="" class="search-bar-form">
-                <input type="search" class="form-control" value="" v-model="user_name" v-on:input="findUsers(user_name)" placeholder="Find user">
+                <input type="search"
+                       class="form-control" value=""
+                       v-model="user_name"
+                       v-on:input="findUsers(user_name)"
+                       v-on:keyup.enter="searchUserTweets(user_name)"
+                       placeholder="Find user"
+                >
             </form>
         </div>
         <div class="row">
-            <p class="autocomplete-message" v-if="!users && user_selected">No results</p>
-            <ul class="autocomplete-list" v-else>
+            <ul class="autocomplete-list" v-if="users">
                 <li class="user" v-for="user in users" v-bind:key="user.id">
                     <a href="#" class="inner" v-on:click="searchUserTweets(user.screen_name)">
                         <div class="li-img">
@@ -22,6 +27,7 @@
                     </a>
                 </li>
             </ul>
+            <p class="autocomplete-message" v-else>No results</p>
         </div>
     </div>
 </template>
