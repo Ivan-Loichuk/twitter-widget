@@ -27,7 +27,6 @@
                     </a>
                 </li>
             </ul>
-            <p class="autocomplete-message" v-else>No results</p>
         </div>
     </div>
 </template>

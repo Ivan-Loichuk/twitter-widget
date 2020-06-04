@@ -1,21 +1,20 @@
 <template>
     <div class="tweet">
         <div class="tweet-content">
-            <a class="tweet-profile" v-bind:href="tweet_data.author_url">
+            <a class="tweet-profile" v-bind:href="this.twitter_url + tweet_data.screen_name">
                 <img class="tweet-avatar"
-                     v-bind:src="tweet_data.profile_img_url">
+                     v-bind:src="tweet_data.profile_image_url">
 
                 <strong class="tweet-username">
-                    {{ tweet_data.name }}
+                    {{ tweet_data.user_name }}
                 </strong>
 
                 <span class="tweet-screen-name">
-                @<b>{{ tweet_data.profile_screen_name }}</b>
+                @<b>{{ tweet_data.screen_name }}</b>
                 </span>
 
                 <span class="tweet-created-time">- {{ article.create_at}}</span>
                 <span class="tweet-retweet-label">{{ article.retweeted_profile ? '(retweet)' : '' }}</span>
-
             </a>
 
             <div class="tweet-text">

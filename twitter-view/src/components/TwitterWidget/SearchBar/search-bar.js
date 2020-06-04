@@ -22,27 +22,16 @@ export default {
             active_loading: false,
         };
     },
-    mounted: function () {
-
-    },
     methods: {
         findUsers: function(search_input) {
             const self = this;
             search_input = trim(search_input);
 
-            if (self.timeoutHandle) {
-                window.clearTimeout(self.timeoutHandle);
-            }
-
-            if (self.cancel) {
-                self.cancel();
-            }
+            self.cancelSearchUserRequest();
 
             if (isEmptyString(search_input)) {
                 self.users = null;
-            }
-
-            if (!isEmptyString(search_input)) {
+            } else {
                 self.timeoutHandle = window.setTimeout(function(){
                     self.searchUsers(search_input);
                 }, 500);
@@ -72,9 +61,8 @@ export default {
                             });
                         }
                     } else {
-                        if (res.data.length !== 0) {
-                            this.users = res.data;
-                        }
+                        this.users = res.data;
+                        this.$emit('change-no-results-message', (!this.users || this.users.length === 0));
                         this.$emit('change-loader-status', false);
                     }
                 })
@@ -82,7 +70,7 @@ export default {
 
         clearData: function () {
             this.users = null;
-            this.$emit('users-founded')
+            this.$emit('users-founded');
             this.$emit('change-loader-status', true);
         },
 
@@ -94,13 +82,21 @@ export default {
                 return;
             }
 
-            if (self.cancel) {
-                self.cancel();
-            }
+            self.cancelSearchUserRequest();
 
             self.users = null;
             self.user_name = screen_name;
             this.$emit('user-selected', screen_name);
+        },
+
+        cancelSearchUserRequest: function () {
+            if (this.cancel) {
+                this.cancel();
+            }
+
+            if (this.timeoutHandle) {
+                window.clearTimeout(this.timeoutHandle);
+            }
         }
     }
 }
