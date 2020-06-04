@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <TwitterNews/>
+    <TwitterWidget/>
+    <notifications group="errors" />
   </div>
 </template>
 
 <script>
-import TwitterNews from './components/TwitterNews.vue'
+import TwitterWidget from './components/TwitterWidget/TwitterWidget'
 
 export default {
   name: 'App',
   components: {
-    TwitterNews
+    TwitterWidget
   }
 }
 

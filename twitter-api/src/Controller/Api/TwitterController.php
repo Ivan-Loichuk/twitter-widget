@@ -15,28 +15,51 @@ use TwitterAPIExchange;
  */
 class TwitterController extends AbstractController
 {
-    /**
-     * @Route("/twitter-news", name="twitter_news")
-     */
-    public function index()
-    {
-        header("Access-Control-Allow-Origin: *");
-        header("Content-Type: application/json; charset=UTF-8");
-        header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
-        header("Access-Control-Max-Age: 3600");
-        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    private $twitter_api;
 
-        $twitter_api = new TwitterAPIExchange([
+    function __construct()
+    {
+        $this->twitter_api = new TwitterAPIExchange([
             'oauth_access_token' => $_ENV['TW_ACCESS_TOKEN'],
             'oauth_access_token_secret' => $_ENV['TW_TOKEN_SECRET'],
             'consumer_key' => $_ENV['TW_API_KEY'],
             'consumer_secret' => $_ENV['TW_API_SECRET_KEY']
         ]);
+    }
 
-        $twitter = new TwitterService($twitter_api);
+    /**
+     * @Route("/twitter-news", name="twitter_news")
+     */
+    public function twitterNews()
+    {
+        $twitter = new TwitterService($this->twitter_api);
 
         $home_timeline = $twitter->getHomeTimeline();
 
         return new JsonResponse(json_decode($home_timeline));
+    }
+
+    /**
+     * @Route("/twitter-users/{q}", name="twitter_users")
+     */
+    public function twitterUsers($q)
+    {
+        $twitter = new TwitterService($this->twitter_api);
+
+        $users_list = $twitter->getUserData($q);
+
+        return new JsonResponse($users_list);
+    }
+
+    /**
+     * @Route("/get/user-tweets/{user}", name="get_user_tweets")
+     */
+    public function getUserTweets($user)
+    {
+        $twitter = new TwitterService($this->twitter_api);
+
+        $users_list = $twitter->searchTweets($user);
+
+        return new JsonResponse($users_list);
     }
 }
