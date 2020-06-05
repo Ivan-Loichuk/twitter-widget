@@ -28,12 +28,6 @@ h3 {
     margin: 0;
 }
 
-.list li {
-    border-bottom: 1px solid #ccc;
-    display: table;
-    border-collapse: collapse;
-    width: 100%;
-}
 .inner {
     display: table-row;
     overflow: hidden;
@@ -68,15 +62,24 @@ h3 {
     font-size: 14px;
 }
 
-@media all and (min-width: 45em) {
-    .list li {
-        float: left;
-        width: 50%;
+@media all and (max-width: 30em) {
+    .li-head  {
+        font-size: 13px;
+    }
+    .li-sub p {
+        font-size: 12px;
+    }
+    .li-img {
+        padding-right: 0.3em;
+        padding-bottom: 0.3em;
     }
 }
 
-@media all and (min-width: 75em) {
-    .list li {
-        width: 33.33333%;
+@media all and (max-width: 20em) {
+    .li-text {
+        padding-left: 0.4em;
+    }
+    .li-img {
+        padding-right: 0.0em;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Service\TwitterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use TwitterAPIExchange;
 
@@ -28,19 +29,9 @@ class TwitterController extends AbstractController
     }
 
     /**
-     * @Route("/twitter-news", name="twitter_news")
-     */
-    public function twitterNews()
-    {
-        $twitter = new TwitterService($this->twitter_api);
-
-        $home_timeline = $twitter->getHomeTimeline();
-
-        return new JsonResponse(json_decode($home_timeline));
-    }
-
-    /**
      * @Route("/twitter-users/{q}", name="twitter_users")
+     * @param $q
+     * @return JsonResponse
      */
     public function twitterUsers($q)
     {
@@ -53,12 +44,30 @@ class TwitterController extends AbstractController
 
     /**
      * @Route("/get/user-tweets/{user}", name="get_user_tweets")
+     * @param $user
+     * @return JsonResponse
+     * @throws \Exception
      */
     public function getUserTweets($user)
     {
         $twitter = new TwitterService($this->twitter_api);
 
         $users_list = $twitter->searchUserTweets($user);
+
+        return new JsonResponse($users_list);
+    }
+
+    /**
+     * @Route("/get/tweets/{search_query}", name="get_tweets")
+     * @param $search_query
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function getTweets($search_query)
+    {
+        $twitter = new TwitterService($this->twitter_api);
+
+        $users_list = $twitter->searchTweets($search_query);
 
         return new JsonResponse($users_list);
     }

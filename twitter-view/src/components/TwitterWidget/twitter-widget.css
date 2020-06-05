@@ -13,4 +13,17 @@ h3 {
 .widget {
     width: 100%;
     max-width: 550px;
+    font-family: "Roboto Light", Geneva, sans-serif;
+}
+
+.hello-message h4 {
+    font-family: Tahoma, Geneva, sans-serif;
+    letter-spacing: 2px;
+    word-spacing: 2px;
+    color: #000000;
+    font-weight: normal;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
 }

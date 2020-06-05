@@ -1,4 +1,15 @@
 .no-found-message {
-    padding-top: 50px;
-    padding-left: 40px;
+    padding-top: 30px;
+}
+
+.no-found-message svg {
+    width: 11em;
+    height: 11em;
+}
+
+@media all and (max-width: 30em) {
+    .no-found-message svg {
+        width: 9em;
+        height: 9em;
+    }
 }

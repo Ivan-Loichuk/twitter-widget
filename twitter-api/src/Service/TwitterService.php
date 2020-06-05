@@ -13,23 +13,6 @@ class TwitterService
     }
 
     /**
-     * @param int $limit
-     * @return mixed
-     */
-    public function getHomeTimeline($limit = 10)
-    {
-        $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
-        $requestMethod = 'GET';
-        $getField = '?screen_name=ILoichuk&count=10';
-
-        $twitts = $this->twitter->setGetfield($getField)
-            ->buildOauth($url, $requestMethod)
-            ->performRequest();
-
-        return ($twitts);
-    }
-
-    /**
      * @param string $q
      * @return array
      */
@@ -47,14 +30,53 @@ class TwitterService
     }
 
     /**
-     * @param string $user_name
-     * @return mixed
+     * @param string $q
+     * @return array
+     * @throws \Exception
      */
-    public function searchUserTweets($user_name = 'ILoichuk')
+    public function searchTweets(string $q)
     {
         $url = 'https://api.twitter.com/1.1/search/tweets.json';
+
         $requestMethod = 'GET';
-        $getField = '?count=100&tweet_mode=extended&result_type=mixed&q=from:' . $user_name;
+        $options = [
+            'exclude=retweets',
+            'exclude_replies=1',
+            'count=50',
+            'tweet_mode=extended',
+            'result_type=recent',
+            '&q=' . $q
+        ];
+
+        $getField = '?' . implode('&', $options);
+
+        $user_tweets = $this->twitter->setGetfield($getField)
+            ->buildOauth($url, $requestMethod)
+            ->performRequest();
+
+        return $this->transformUsersTweetsData($user_tweets);
+    }
+
+    /**
+     * @param string $user_name
+     * @return array
+     * @throws \Exception
+     */
+    public function searchUserTweets(string $user_name)
+    {
+        $url = 'https://api.twitter.com/1.1/search/tweets.json';
+
+        $requestMethod = 'GET';
+        $options = [
+            'exclude=retweets',
+            'exclude_replies=1',
+            'count=50',
+            'tweet_mode=extended',
+            'result_type=mixed',
+            '&q=from:' . $user_name
+        ];
+
+        $getField = '?' . implode('&', $options);
 
         $user_tweets = $this->twitter->setGetfield($getField)
             ->buildOauth($url, $requestMethod)
@@ -95,7 +117,7 @@ class TwitterService
     {
         $user_tweets = json_decode($user_tweets);
 
-        //dd($user_tweets->statuses);
+        //dd($user_tweets);
         $user_tweets_data = [];
         if (isset($user_tweets->statuses)) {
             foreach ($user_tweets->statuses as $tweet) {

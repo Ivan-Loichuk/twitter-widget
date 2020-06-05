@@ -18,7 +18,7 @@ export default {
             cancel: null,
             users: null,
             timeoutHandle: null,
-            user_tweets: null,
+            tweets: null,
             active_loading: false,
         };
     },
@@ -72,6 +72,7 @@ export default {
             this.users = null;
             this.$emit('users-founded');
             this.$emit('change-loader-status', true);
+            this.$emit('change-no-results-message', false);
         },
 
         searchUserTweets: function (screen_name) {
@@ -87,6 +88,21 @@ export default {
             self.users = null;
             self.user_name = screen_name;
             this.$emit('user-selected', screen_name);
+        },
+
+        searchTweets: function (search_query) {
+            let self = this;
+            search_query = trim(search_query);
+
+            if (isEmptyString(search_query)) {
+                return;
+            }
+
+            self.cancelSearchUserRequest();
+
+            self.users = null;
+            self.user_name = search_query;
+            this.$emit('input_entered', search_query);
         },
 
         cancelSearchUserRequest: function () {

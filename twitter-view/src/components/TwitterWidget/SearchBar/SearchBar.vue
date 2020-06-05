@@ -6,13 +6,13 @@
                        class="form-control" value=""
                        v-model="user_name"
                        v-on:input="findUsers(user_name)"
-                       v-on:keyup.enter="searchUserTweets(user_name)"
-                       placeholder="Find user"
+                       v-on:keyup.enter="searchTweets(user_name)"
+                       placeholder="Start typing"
                 >
             </form>
         </div>
         <div class="row">
-            <ul class="autocomplete-list" v-if="users">
+            <ul class="autocomplete-list" v-if="users && users.length !== 0">
                 <li class="user" v-for="user in users" v-bind:key="user.id">
                     <a href="#" class="inner" v-on:click="searchUserTweets(user.screen_name)">
                         <div class="li-img">

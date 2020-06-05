@@ -16,16 +16,31 @@ export default {
     },
     data() {
         return {
-            user_tweets: null,
+            tweets: null,
             active_loading: false,
             active_no_result_message: false,
         };
     },
     methods: {
         getUserTweets: function (screen_name) {
+            const url = '/api/get/user-tweets/' + screen_name;
+
+            this.getTweetsFromServer(url);
+        },
+
+        getRelatedTweets: function (search_query) {
+            const url = '/api/get/tweets/' + search_query;
+
+            this.getTweetsFromServer(url);
+        },
+
+        getTweetsFromServer: function(url) {
             this.active_loading = true;
+            this.active_no_result_message = false;
+            this.tweets = null;
+
             axios
-                .get('/api/get/user-tweets/' + screen_name)
+                .get(url)
                 .then(res => {
                     if (res.data.errors) {
                         for (let key in res.data.errors) {
@@ -37,9 +52,9 @@ export default {
                             });
                         }
                     } else {
-                        this.user_tweets = res.data;
+                        this.tweets = res.data;
                         this.active_loading = false;
-                        this.active_no_result_message = !this.user_tweets || this.user_tweets.length === 0;
+                        this.active_no_result_message = !this.tweets || this.tweets.length === 0;
                     }
                 })
         },
