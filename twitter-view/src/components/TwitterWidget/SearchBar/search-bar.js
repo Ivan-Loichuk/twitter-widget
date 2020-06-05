@@ -75,22 +75,7 @@ export default {
             this.$emit('change-no-results-message', false);
         },
 
-        searchUserTweets: function (screen_name) {
-            let self = this;
-            screen_name = trim(screen_name);
-
-            if (isEmptyString(screen_name)) {
-                return;
-            }
-
-            self.cancelSearchUserRequest();
-
-            self.users = null;
-            self.user_name = screen_name;
-            this.$emit('user-selected', screen_name);
-        },
-
-        searchTweets: function (search_query) {
+        searchTweets: function (search_query, user_selected) {
             let self = this;
             search_query = trim(search_query);
 
@@ -102,7 +87,7 @@ export default {
 
             self.users = null;
             self.user_name = search_query;
-            this.$emit('input_entered', search_query);
+            this.$emit('get-tweets', search_query, user_selected);
         },
 
         cancelSearchUserRequest: function () {

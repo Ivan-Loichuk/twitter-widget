@@ -1,12 +1,12 @@
 <template>
     <div class="container search-bar">
         <div class="row">
-            <form action="" class="search-bar-form">
+            <form class="search-bar-form">
                 <input type="search"
                        class="form-control" value=""
                        v-model="user_name"
                        v-on:input="findUsers(user_name)"
-                       v-on:keyup.enter="searchTweets(user_name)"
+                       v-on:keyup.enter="searchTweets(user_name, 0)"
                        placeholder="Start typing"
                 >
             </form>
@@ -14,7 +14,7 @@
         <div class="row">
             <ul class="autocomplete-list" v-if="users && users.length !== 0">
                 <li class="user" v-for="user in users" v-bind:key="user.id">
-                    <a href="#" class="inner" v-on:click="searchUserTweets(user.screen_name)">
+                    <a href="#" class="inner" v-on:click="searchTweets(user.screen_name, 1)">
                         <div class="li-img">
                             <img v-bind:src="user.profile_image_url"/>
                         </div>

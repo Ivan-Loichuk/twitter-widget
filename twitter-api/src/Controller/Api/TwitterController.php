@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Api;
 
@@ -43,31 +44,24 @@ class TwitterController extends AbstractController
     }
 
     /**
-     * @Route("/get/user-tweets/{user}", name="get_user_tweets")
-     * @param $user
-     * @return JsonResponse
-     * @throws \Exception
-     */
-    public function getUserTweets($user)
-    {
-        $twitter = new TwitterService($this->twitter_api);
-
-        $users_list = $twitter->searchUserTweets($user);
-
-        return new JsonResponse($users_list);
-    }
-
-    /**
      * @Route("/get/tweets/{search_query}", name="get_tweets")
-     * @param $search_query
+     * @param string $search_query
+     * @param Request $request
      * @return JsonResponse
      * @throws \Exception
      */
-    public function getTweets($search_query)
+    public function getTweets(string $search_query, Request $request)
     {
         $twitter = new TwitterService($this->twitter_api);
+        $since_id = $request->get('since_id');
+        $classic_mode = $request->get('classic_mode');
+        $user_selected = $request->get('user_selected');
 
-        $users_list = $twitter->searchTweets($search_query);
+        $users_list = $twitter->searchTweets($search_query, [
+            'since_id' => (int) $since_id,
+            'classic_mode' => (int) $classic_mode,
+            'user_selected' => (int) $user_selected,
+        ]);
 
         return new JsonResponse($users_list);
     }

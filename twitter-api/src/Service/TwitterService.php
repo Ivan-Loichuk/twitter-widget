@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace App\Service;
 
 use DateTime;
@@ -31,52 +32,40 @@ class TwitterService
 
     /**
      * @param string $q
+     * @param array $params
      * @return array
      * @throws \Exception
      */
-    public function searchTweets(string $q)
+    public function searchTweets(string $q, array $params = [])
     {
         $url = 'https://api.twitter.com/1.1/search/tweets.json';
 
         $requestMethod = 'GET';
+
         $options = [
-            'exclude=retweets',
-            'exclude_replies=1',
-            'count=50',
-            'tweet_mode=extended',
-            'result_type=recent',
-            '&q=' . $q
+            'exclude' => 'retweets',
+            'exclude_replies' => '1',
+            'count' => '50',
+            'tweet_mode' => 'extended',
+            'include_entities' => 1,
+            'result_type' => 'recent',
+            'q' => addslashes($q)
         ];
 
-        $getField = '?' . implode('&', $options);
+        if (!empty($params['user_selected'])) {
+            $options['q'] = 'from:' . addslashes($q);
+        }
 
-        $user_tweets = $this->twitter->setGetfield($getField)
-            ->buildOauth($url, $requestMethod)
-            ->performRequest();
+        if (!empty($params['classic_mode'])) {
+            $options['tweet_mode'] = 'classic';
+            $options['include_entities'] = 0;
+        }
 
-        return $this->transformUsersTweetsData($user_tweets);
-    }
+        if (!empty($params['since_id'])) {
+            $options['since_id'] = (int) $params['since_id'];
+        }
 
-    /**
-     * @param string $user_name
-     * @return array
-     * @throws \Exception
-     */
-    public function searchUserTweets(string $user_name)
-    {
-        $url = 'https://api.twitter.com/1.1/search/tweets.json';
-
-        $requestMethod = 'GET';
-        $options = [
-            'exclude=retweets',
-            'exclude_replies=1',
-            'count=50',
-            'tweet_mode=extended',
-            'result_type=mixed',
-            '&q=from:' . $user_name
-        ];
-
-        $getField = '?' . implode('&', $options);
+        $getField = '?' . TstringService::buildHttpQuery($options, '&');
 
         $user_tweets = $this->twitter->setGetfield($getField)
             ->buildOauth($url, $requestMethod)
@@ -156,8 +145,12 @@ class TwitterService
                     }
                 }
 
-                $user_tweets_data[] = $data;
+                $user_tweets_data['tweets'][] = $data;
             }
+        }
+
+        if (isset($user_tweets->search_metadata)) {
+            $user_tweets_data['max_id'] = isset($user_tweets->search_metadata->max_id) ?  strval($user_tweets->search_metadata->max_id)  : null;
         }
 
         return $user_tweets_data;
