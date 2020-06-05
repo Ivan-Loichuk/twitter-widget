@@ -6,7 +6,7 @@
                        class="form-control" value=""
                        v-model="user_name"
                        v-on:input="findUsers(user_name)"
-                       v-on:keyup.enter="searchTweets(user_name, 0)"
+                       v-on:keydown.enter.prevent="searchTweets(user_name, 0)"
                        placeholder="Start typing"
                 >
             </form>

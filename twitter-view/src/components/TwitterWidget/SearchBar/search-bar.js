@@ -15,7 +15,7 @@ export default {
     data() {
         return {
             user_name: "",
-            cancel: null,
+            cancelRequest: null,
             users: null,
             timeoutHandle: null,
             tweets: null,
@@ -45,11 +45,11 @@ export default {
             axios
                 .get('/api/twitter-users/' + search_input, {
                     cancelToken: new CancelToken(function executor(c) {
-                        self.cancel = c;
+                        self.cancelRequest = c;
                     })
                 })
                 .then(res => {
-                    self.cancel = null;
+                    self.cancelRequest = null;
                     window.clearTimeout(self.timeoutHandle);
                     if (res.data.errors) {
                         for (let key in res.data.errors) {
@@ -91,8 +91,8 @@ export default {
         },
 
         cancelSearchUserRequest: function () {
-            if (this.cancel) {
-                this.cancel();
+            if (this.cancelRequest) {
+                this.cancelRequest();
             }
 
             if (this.timeoutHandle) {

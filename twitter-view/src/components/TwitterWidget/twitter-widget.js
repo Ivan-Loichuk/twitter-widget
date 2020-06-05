@@ -6,6 +6,8 @@ import NoFoundMessage from "./NoFoundMessage/NoFoundMessage.vue";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+const CancelToken = axios.CancelToken;
+
 export default {
     name: "TwitterWidget",
     components: {
@@ -24,21 +26,25 @@ export default {
             has_new_tweet: false,
             search_query: null,
             user_selected: null,
+            cancelRequest: null,
         };
     },
     methods: {
         getTweets: function (search_query, user_selected) {
             const url = '/api/get/tweets/' + search_query + '?user_selected=' + parseInt(user_selected)
             let self = this;
-            self.active_loading = true;
-            self.active_no_result_message = false;
-            self.tweets = null;
+            self.setParamsBeforeRequest();
             self.search_query = search_query;
             self.user_selected = user_selected;
 
             axios
-                .get(url)
+                .get(url, {
+                    cancelToken: new CancelToken(function executor(c) {
+                        self.cancelRequest = c;
+                    })
+                })
                 .then(res => {
+                    self.cancelRequest = null;
                     if (res.data.errors) {
                         for (let key in res.data.errors) {
                             self.$notify({
@@ -55,12 +61,9 @@ export default {
 
                         if (res.data.max_id) {
                             self.since_id = res.data.max_id;
-                            clearInterval(self.checkNewTweetsInterval);
                         }
 
-                        self.active_loading = false;
-                        self.active_no_result_message = !self.tweets || self.tweets.length === 0;
-                        self.has_new_tweet = false;
+                        self.setParamsAfterRequest();
 
                         self.checkNewTweetsInterval = setInterval(function() {
                             self.checkNewTweets(url);
@@ -75,6 +78,23 @@ export default {
 
         changeNoResultMessage: function (status = false) {
             this.active_no_result_message = status;
+        },
+
+        setParamsBeforeRequest: function() {
+            this.active_loading = true;
+            this.active_no_result_message = false;
+            this.tweets = null;
+
+            if (this.cancelRequest) {
+                this.cancelRequest();
+            }
+        },
+
+        setParamsAfterRequest: function() {
+            this.active_loading = false;
+            this.active_no_result_message = !this.tweets || this.tweets.length === 0;
+            this.has_new_tweet = false;
+            clearInterval(this.checkNewTweetsInterval);
         },
 
         checkNewTweets: function (main_url) {
