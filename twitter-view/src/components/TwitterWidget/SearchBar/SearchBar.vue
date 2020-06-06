@@ -7,8 +7,7 @@
                        v-model="user_name"
                        v-on:input="findUsers(user_name)"
                        v-on:keydown.enter.prevent="searchTweets(user_name, 0)"
-                       placeholder="Start typing"
-                >
+                       placeholder="Start typing">
             </form>
         </div>
         <div class="row">
@@ -16,7 +15,7 @@
                 <li class="user" v-for="user in users" v-bind:key="user.id">
                     <a href="#" class="inner" v-on:click="searchTweets(user.screen_name, 1)">
                         <div class="li-img">
-                            <img v-bind:src="user.profile_image_url"/>
+                            <img v-bind:src="user.profile_image_url" v-bind:alt="user.name"/>
                         </div>
                         <div class="li-text">
                             <h5 class="li-head">{{ user.name }} <span>(@{{ user.screen_name }})</span></h5>

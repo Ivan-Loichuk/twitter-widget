@@ -106,7 +106,6 @@ class TwitterService
     {
         $user_tweets = json_decode($user_tweets);
 
-        //dd($user_tweets);
         $user_tweets_data = [];
         if (isset($user_tweets->statuses)) {
             foreach ($user_tweets->statuses as $tweet) {
@@ -117,32 +116,11 @@ class TwitterService
                 $data['text'] = isset($tweet->full_text) ? $tweet->full_text : "";
 
                 if (isset($tweet->user)) {
-                    $data['user']['user_name'] = $tweet->user->name;
-                    $data['user']['screen_name'] = $tweet->user->screen_name;
-                    $data['user']['profile_image_url'] = $tweet->user->profile_image_url_https ?? $tweet->user->profile_image_url;
-                }
-
-                if (isset($tweet->retweeted_status)) {
-                    $user = $tweet->retweeted_status->user;
-                    $data['retweeted_profile']['user_name'] = $user->name;
-                    $data['retweeted_profile']['screen_name'] = $user->screen_name;
-                    $data['retweeted_profile']['profile_image_url'] = $user->profile_image_url_https ?? $user->profile_image_url;
-
-                    $data['text'] = isset($tweet->retweeted_status->full_text) ? $tweet->retweeted_status->full_text : "";
+                    $data['user'] = $this->transformUserData($tweet->user);
                 }
 
                 if (isset($tweet->extended_entities) && isset($tweet->extended_entities->media)) {
-                    $media = $tweet->extended_entities->media;
-                    foreach ($media as $id => $m) {
-                        $data['media'][$id]['type'] = $m->type;
-                        $data['media'][$id]['media_url'] = $m->media_url_https ?? $m->media_url;
-                        $data['media'][$id]['tweet_url'] = $m->url;
-
-                        if (isset($m->video_info) && isset($m->video_info->variants)) {
-                            $variant = reset($m->video_info->variants);
-                            $data['media'][$id]['video_url'] = $variant->url;
-                        }
-                    }
+                    $data['media'] = $this->transformMediaData($tweet->extended_entities->media);
                 }
 
                 $user_tweets_data['tweets'][] = $data;
@@ -154,5 +132,39 @@ class TwitterService
         }
 
         return $user_tweets_data;
+    }
+
+    /**
+     * @param $user
+     * @return array
+     */
+    private function transformUserData($user): array
+    {
+        $data['user_name'] = $user->name;
+        $data['screen_name'] = $user->screen_name;
+        $data['profile_image_url'] = $user->profile_image_url_https ?? $user->profile_image_url;
+
+        return $data;
+    }
+
+    /**
+     * @param $media
+     * @return array
+     */
+    private function transformMediaData($media): array
+    {
+        $data = [];
+        foreach ($media as $id => $m) {
+            $data[$id]['type'] = $m->type;
+            $data[$id]['media_url'] = $m->media_url_https ?? $m->media_url;
+            $data[$id]['tweet_url'] = $m->url;
+
+            if (isset($m->video_info) && isset($m->video_info->variants)) {
+                $variant = reset($m->video_info->variants);
+                $data[$id]['video_url'] = $variant->url;
+            }
+        }
+
+        return $data;
     }
 }

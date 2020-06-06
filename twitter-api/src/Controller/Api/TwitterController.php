@@ -13,7 +13,7 @@ use TwitterAPIExchange;
 /**
  * Class TwitterController
  * @package App\Controller\Api
- * @Route("/api")
+ * @Route("/api/twitter")
  */
 class TwitterController extends AbstractController
 {
@@ -30,7 +30,7 @@ class TwitterController extends AbstractController
     }
 
     /**
-     * @Route("/twitter-users/{q}", name="twitter_users")
+     * @Route("/users/{q}", name="users")
      * @param $q
      * @return JsonResponse
      */
@@ -44,13 +44,13 @@ class TwitterController extends AbstractController
     }
 
     /**
-     * @Route("/get/tweets/{search_query}", name="get_tweets")
-     * @param string $search_query
+     * @Route("/tweets/{search_query}", name="tweets")
+     * @param $search_query
      * @param Request $request
      * @return JsonResponse
      * @throws \Exception
      */
-    public function getTweets(string $search_query, Request $request)
+    public function getTweets($search_query, Request $request)
     {
         $twitter = new TwitterService($this->twitter_api);
         $since_id = $request->get('since_id');

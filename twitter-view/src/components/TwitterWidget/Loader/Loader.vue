@@ -6,5 +6,9 @@
     </div>
 </template>
 
-<script src="./loader.js"></script>
-<style src="./loader.css"></style>
+<script>
+    export default {
+        name: "loader",
+        props: ['active_loading'],
+    }
+</script>

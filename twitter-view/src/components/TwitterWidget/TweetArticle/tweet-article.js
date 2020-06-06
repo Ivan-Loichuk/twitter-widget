@@ -1,4 +1,5 @@
 import Media from "./Media/Media.vue";
+import {TWITTER_WIDGET} from "../../../config/Constants";
 
 export default {
     name: "TweetArticle",
@@ -8,13 +9,7 @@ export default {
     },
     data() {
         return {
-            tweet_data: {
-                screen_name: null,
-            },
-            twitter_url: 'https://twitter.com/',
+            twitter_url: TWITTER_WIDGET.TWITTER_URL,
         };
-    },
-    mounted() {
-        this.tweet_data = this.article.retweeted_profile ?? this.article.user;
     },
 }

@@ -8,10 +8,7 @@
                 </video>
             </div>
             <div v-else-if="m.type == 'photo'">
-                <img class="media-img" v-bind:src="m.media_url">
-            </div>
-            <div v-else>
-
+                <img class="media-img" v-bind:src="m.media_url" v-bind:alt="m.type">
             </div>
         </div>
     </div>
