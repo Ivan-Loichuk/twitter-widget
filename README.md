@@ -4,7 +4,7 @@ A small app to get tweets from Twitter:
   - find twitter profiles by user name and display user tweets (without retweets).
   - find tweets by specific word or phrase (without retweets).
   
-##Requirements
+## Requirements
 - PHP 7.2.5 or higher;
 - node.js v12.16.1 or higher
 - usual [Symfony application requirements](https://symfony.com/doc/current/setup.html).
@@ -40,5 +40,5 @@ This project uses libraries and tools like:
 - go to `/twitter-app` folder
 - run `composer install`
 - create new app on twitter developers [page](https://developer.twitter.com/en/apps)
-- set required variables: `TW_API_KEY`, `TW_API_SECRET_KEY`, `TW_ACCESS_TOKEN`, `TW_TOKEN_SECRET`
+- set required variables: `TW_API_KEY`, `TW_API_SECRET_KEY`, `TW_ACCESS_TOKEN`, `TW_TOKEN_SECRET` in `.env` file
 - install [Symfony](https://symfony.com/download) binary and run command `symfony server:start`
