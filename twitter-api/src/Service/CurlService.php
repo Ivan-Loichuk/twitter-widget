@@ -27,7 +27,7 @@ class CurlService
      * @param array $options
      * @return bool
      */
-    public function setOptArray(array $options): bool
+    public function setOptionArray(array $options): bool
     {
         return curl_setopt_array($this->curl, $options);
     }

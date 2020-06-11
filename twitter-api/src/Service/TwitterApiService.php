@@ -200,7 +200,7 @@ class TwitterApiService implements TwitterApiInterface
             CURLOPT_SSL_VERIFYPEER => false
         ];
 
-        $curl->setOptArray($options);
+        $curl->setOptionArray($options);
         $error = $curl->error();
 
         if ($error) {

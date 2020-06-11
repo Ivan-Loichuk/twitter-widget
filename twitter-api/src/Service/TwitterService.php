@@ -47,8 +47,12 @@ class TwitterService
             'tweet_mode' => 'extended',
             'include_entities' => 1,
             'result_type' => 'recent',
-            'q' => addslashes($q)
+            'q' => addslashes($q),
         ];
+
+        if (!empty($params['user_selected'])) {
+            $options['q'] = 'from:' . addslashes($q);
+        }
 
         if (!empty($params['classic_mode'])) {
             $options['tweet_mode'] = 'classic';

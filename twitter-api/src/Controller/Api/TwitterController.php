@@ -50,10 +50,12 @@ class TwitterController extends AbstractController
         $twitter = new TwitterService($this->twitter_api);
         $since_id = $request->get('since_id');
         $classic_mode = $request->get('classic_mode');
+        $user_selected = $request->get('user_selected');
 
         $user_tweets = $twitter->searchTweets($search_query, [
             'since_id' => $since_id,
             'classic_mode' => $classic_mode,
+            'user_selected' => $user_selected,
         ]);
 
         return new JsonResponse($user_tweets);
