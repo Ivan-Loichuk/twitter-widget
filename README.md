@@ -23,7 +23,6 @@ This project uses libraries and tools like:
 - [symfony](https://symfony.com/) PHP framework for web projects
 - [composer](https://getcomposer.org) A Dependency Manager for PHP
 - [Twitter API](https://developer.twitter.com/en/docs/api-reference-index) Twitter’s developer platform
-- [twitter-api-php](https://github.com/J7mbo/twitter-api-php) Official PHP Library for Twitter API 
 - [bootstrap](https://getbootstrap.com/) front-end open source toolkit for styling
 
 ## How to build/run the projects via localhost
