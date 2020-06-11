@@ -8,7 +8,7 @@ class TwitterService
 {
     private $twitter;
 
-    function __construct($twitter)
+    function __construct(TwitterApiInterface $twitter)
     {
         $this->twitter = $twitter;
     }
@@ -19,15 +19,17 @@ class TwitterService
      */
     public function getUserData(string $q)
     {
-        $url = 'https://api.twitter.com/1.1/users/search.json';
-        $requestMethod = 'GET';
-        $getField = '?count=100&q=' . $q;
+        $users_list = $this->twitter->getRequestData(
+            '/1.1/users/search.json',
+            [
+                'q' => $q,
+                'count' => '2'
+            ]
+        );
 
-        $users = $this->twitter->setGetfield($getField)
-            ->buildOauth($url, $requestMethod)
-            ->performRequest();
+        $users_list = $users_list ? $this->transformUsersData($users_list) : [];
 
-        return $this->transformUsersData($users);
+        return $users_list;
     }
 
     /**
@@ -38,10 +40,6 @@ class TwitterService
      */
     public function searchTweets(string $q, array $params = [])
     {
-        $url = 'https://api.twitter.com/1.1/search/tweets.json';
-
-        $requestMethod = 'GET';
-
         $options = [
             'exclude' => 'retweets',
             'exclude_replies' => '1',
@@ -52,10 +50,6 @@ class TwitterService
             'q' => addslashes($q)
         ];
 
-        if (!empty($params['user_selected'])) {
-            $options['q'] = 'from:' . addslashes($q);
-        }
-
         if (!empty($params['classic_mode'])) {
             $options['tweet_mode'] = 'classic';
             $options['include_entities'] = 0;
@@ -65,20 +59,21 @@ class TwitterService
             $options['since_id'] = (int) $params['since_id'];
         }
 
-        $getField = '?' . TstringService::buildHttpQuery($options, '&');
+        $user_tweets = $this->twitter->getRequestData(
+            '/1.1/search/tweets.json',
+            $options
+        );
 
-        $user_tweets = $this->twitter->setGetfield($getField)
-            ->buildOauth($url, $requestMethod)
-            ->performRequest();
+        $user_tweets = $user_tweets ? $this->transformUsersTweetsData($user_tweets) : [];
 
-        return $this->transformUsersTweetsData($user_tweets);
+        return $user_tweets;
     }
 
     /**
      * @param $users
      * @return array
      */
-    private function transformUsersData($users): array
+    public function transformUsersData($users): array
     {
         $users = json_decode($users);
 
@@ -102,7 +97,7 @@ class TwitterService
      * @return array
      * @throws \Exception
      */
-    private function transformUsersTweetsData($user_tweets): array
+    public function transformUsersTweetsData($user_tweets): array
     {
         $user_tweets = json_decode($user_tweets);
 

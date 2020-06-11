@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
+use App\Service\TwitterApiService;
 use App\Service\TwitterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use TwitterAPIExchange;
 
 /**
  * Class TwitterController
@@ -19,14 +19,9 @@ class TwitterController extends AbstractController
 {
     private $twitter_api;
 
-    function __construct()
+    function __construct(TwitterApiService $twitter_api)
     {
-        $this->twitter_api = new TwitterAPIExchange([
-            'oauth_access_token' => $_ENV['TW_ACCESS_TOKEN'],
-            'oauth_access_token_secret' => $_ENV['TW_TOKEN_SECRET'],
-            'consumer_key' => $_ENV['TW_API_KEY'],
-            'consumer_secret' => $_ENV['TW_API_SECRET_KEY']
-        ]);
+        $this->twitter_api = $twitter_api;
     }
 
     /**
@@ -55,14 +50,12 @@ class TwitterController extends AbstractController
         $twitter = new TwitterService($this->twitter_api);
         $since_id = $request->get('since_id');
         $classic_mode = $request->get('classic_mode');
-        $user_selected = $request->get('user_selected');
 
-        $users_list = $twitter->searchTweets($search_query, [
-            'since_id' => (int) $since_id,
-            'classic_mode' => (int) $classic_mode,
-            'user_selected' => (int) $user_selected,
+        $user_tweets = $twitter->searchTweets($search_query, [
+            'since_id' => $since_id,
+            'classic_mode' => $classic_mode,
         ]);
 
-        return new JsonResponse($users_list);
+        return new JsonResponse($user_tweets);
     }
 }
